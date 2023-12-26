@@ -2,29 +2,22 @@ package ovh.miroslaw.gamification;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Command
 public class Gamification {
 
-    //    @Value("#{deck[1].title}")
-//    private String title;
+    @Autowired
+    private DeckManager deckManager;
 
-//    @Autowired
-    private Deck deck;
-    @ConstructorBinding
-    Gamification(Deck deck){
-        this.deck = deck;
-    }
+    @Autowired
+    private DeckWrite deckWrite;
 
-    @Command(description = "list of the featured events", alias = "d")
-    public void draw(@Option(defaultValue ="1", longNames = "cant-not-have-spaces", shortNames = 'n') int cardDraw) {
-        System.out.println(cardDraw);
-        System.out.println(deck);
-
+    @Command(description = "Draw cards", alias = "d")
+    public void draw(@Option(defaultValue = "1", longNames = "draw-number", shortNames = 'n') int drawNumber) {
+        final Deck deck = deckManager.draw(drawNumber);
+        deckWrite.write(deck);
     }
 }

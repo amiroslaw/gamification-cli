@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-shell.version>3.2.0-RC1</spring-shell.version>
+		<mainClass>ovh.miroslaw.gamification.GamificationApplication</mainClass>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -33,7 +34,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.5</version>
+        </dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>2.13.5</version>
+		</dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -51,6 +62,16 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<skipNativeTests>true</skipNativeTests>
+					<imageName>${project.name}</imageName>
+					<mainClass>${mainClass}</mainClass>
+					<buildArgs>
+						<buildArg>--enable-preview</buildArg>
+						<buildArg>--no-fallback</buildArg>
+						<buildArg>--no-server</buildArg>
+					</buildArgs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
