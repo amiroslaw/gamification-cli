@@ -18,6 +18,11 @@ public class DeckWrite {
     @Value("${spring.config.import}")
     private File configPath;
 
+    /**
+     * Writes the provided Deck object to a YAML file.
+     *
+     * @param deck The Deck object to write to file. Cannot be null.
+     */
     @RegisterReflectionForBinding(Deck.class)
     public void write(Deck deck) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory().disable(Feature.WRITE_DOC_START_MARKER));

@@ -1,19 +1,17 @@
 package ovh.miroslaw.gamification;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
+//TODO read finished tasks from timewarrior
+// add deck generator - change optional:file in properties
 @RequiredArgsConstructor
 @Command
 public class Gamification {
 
-    @Autowired
-    private DeckManager deckManager;
-
-    @Autowired
-    private DeckWrite deckWrite;
+    private final DeckManager deckManager;
+    private final DeckWrite deckWrite;
 
     @Command(description = "Draw cards", alias = "d")
     public void draw(@Option(defaultValue = "1", longNames = "draw-number", shortNames = 'n') int drawNumber) {

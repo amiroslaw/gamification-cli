@@ -15,6 +15,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Manages operations on a Deck of cards.
+ */
 @RequiredArgsConstructor
 @Service
 public class DeckManager {
@@ -29,12 +32,24 @@ public class DeckManager {
             EMPTY_CARD_DESC,
             Strings.EMPTY);
 
+    /**
+     * Prints a summary of the current deck.
+     */
     public void list() {
         System.out.println("Deck size: " + deck.getSize());
         System.out.printf("Cards reminds - %d:%n", deck.getCards().size());
         printCardTableView(deck.getCards());
     }
 
+    /**
+     * Draws the specified number of cards from the deck.
+     *
+     * Validates the draw amount does not exceed deck size. Polls the cards from the deck. Prints a table view of the
+     * drawn cards. Updates the deck by removing the drawn cards.
+     *
+     * @param drawNumber The number of cards to draw from the deck.
+     * @return The updated deck instance.
+     */
     public Deck draw(int drawNumber) {
         drawNumber = validateDrawAmount(drawNumber);
         final List<Card> polledCards = pollCards(drawNumber);
