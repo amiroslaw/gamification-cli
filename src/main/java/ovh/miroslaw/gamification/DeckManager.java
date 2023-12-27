@@ -2,12 +2,15 @@ package ovh.miroslaw.gamification;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.shell.table.ArrayTableModel;
+import org.springframework.shell.table.BorderStyle;
+import org.springframework.shell.table.TableBuilder;
+import org.springframework.shell.table.TableModel;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,15 +25,20 @@ public class DeckManager {
     public static final int MAIN_AWARD_CARD_TYPE = 1;
     private final Deck deck;
 
-    private final Supplier<Card> createEmptyCard = () -> new Card(EMPTY_CARD_VALUE, EMPTY_CARD_VALUE, EMPTY_CARD_TITLE, EMPTY_CARD_DESC,
+    private final Supplier<Card> createEmptyCard = () -> new Card(EMPTY_CARD_VALUE, EMPTY_CARD_VALUE, EMPTY_CARD_TITLE,
+            EMPTY_CARD_DESC,
             Strings.EMPTY);
 
-    private final Consumer<Card> printCard = d -> System.out.printf("Type: %d  \t %s - %s %s%n", d.type(), d.title(), d.description(), d.url());
+    public void list() {
+        System.out.println("Deck size: " + deck.getSize());
+        System.out.printf("Cards reminds - %d:%n", deck.getCards().size());
+        printCardTableView(deck.getCards());
+    }
 
     public Deck draw(int drawNumber) {
         drawNumber = validateDrawAmount(drawNumber);
         final List<Card> polledCards = pollCards(drawNumber);
-        polledCards.forEach(printCard);
+        printCardTableView(polledCards);
         deck.drawCards(polledCards, drawNumber);
         return deck;
     }
@@ -69,9 +77,19 @@ public class DeckManager {
         return card;
     }
 
-    public void list() {
-        System.out.println("Deck size: " + deck.getSize());
-        System.out.printf("Cards reminds - %d:%n", deck.getCards().size());
-        deck.getCards().forEach(printCard);
+    private void printCardTableView(List<Card> cards) {
+        if (cards.isEmpty()) {
+            System.out.println("No cards found");
+        }
+        final List<Object[]> data = cards.stream()
+                .map(i -> new Object[]{i.type(), i.title(), i.description(), i.url()})
+                .collect(Collectors.toList());
+        data.addFirst(new Object[]{"Type", "Title", "Description", "URL"});
+
+        TableModel model = new ArrayTableModel(data.toArray(Object[][]::new));
+        TableBuilder tableBuilder = new TableBuilder(model);
+        tableBuilder.addFullBorder(BorderStyle.fancy_light);
+        tableBuilder.addHeaderBorder(BorderStyle.fancy_double);
+        System.out.printf("%n%s%n", tableBuilder.build().render(110));
     }
 }
