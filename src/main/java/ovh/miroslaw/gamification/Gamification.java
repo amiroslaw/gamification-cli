@@ -20,4 +20,9 @@ public class Gamification {
         final Deck deck = deckManager.draw(drawNumber);
         deckWrite.write(deck);
     }
+
+    @Command(description = "List cards", alias = "l")
+    public void list() {
+        deckManager.list();
+    }
 }
