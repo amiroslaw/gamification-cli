@@ -8,6 +8,7 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import ovh.miroslaw.gamification.model.Deck;
+import ovh.miroslaw.gamification.model.StyleOption;
 import ovh.miroslaw.gamification.model.TimewDuration;
 
 import java.util.Arrays;
@@ -93,10 +94,20 @@ public class Gamification {
                     .defaultValue(defaultDuration)
                     .completion(this::createDurationCompletion)
                 .and()
+                .withOption()
+                    .longNames("style")
+                    .shortNames('s')
+                    .description("Table style")
+                    .defaultValue(StyleOption.fancy.toString())
+                    .completion(ctx -> Arrays.asList(
+                            new CompletionProposal(StyleOption.slim.toString()),
+                            new CompletionProposal(StyleOption.fancy.toString())))
+                .and()
                 .withTarget()
                     .function(ctx -> {
                         final String duration = ctx.getOptionValue("d");
-                        return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()));
+                        final String style = ctx.getOptionValue("s");
+                        return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()), StyleOption.valueOf(style));
                     })
                 .and()
                 .build();

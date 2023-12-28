@@ -29,10 +29,13 @@ public class Task {
         return end == null ? Duration.ofMinutes(0) : Duration.between(end, start).abs();
     }
 
-    public TagDuration mapToTagDuration() {
+    public TagDuration mapToTagDuration(StyleOption style) {
         final Duration duration = end == null ? Duration.ofMinutes(0) : Duration.between(end, start);
-        final String tagsJoin = String.join(", ", this.tags);
-        return new TagDuration(tagsJoin, duration.abs());
+        final String tag = switch (style) {
+            case fancy -> String.join(", ", this.tags);
+            case slim -> this.tags.getLast();
+        };
+        return new TagDuration(tag, duration.abs());
     }
 
     public LocalDateTime getStart() {

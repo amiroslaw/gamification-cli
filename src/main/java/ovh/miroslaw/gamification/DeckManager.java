@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ovh.miroslaw.gamification.model.Card;
 import ovh.miroslaw.gamification.model.Deck;
+import ovh.miroslaw.gamification.model.StyleOption;
 import ovh.miroslaw.gamification.model.Task;
 import ovh.miroslaw.gamification.model.TimewDuration;
 
@@ -48,8 +49,8 @@ public class DeckManager {
                 getCardTableView(deck.getCards()));
     }
 
-    public String timewSummary(TimewDuration duration) {
-        return getTaskSummaryTableView(dataReader.getData(duration));
+    public String timewSummary(TimewDuration duration, StyleOption style) {
+        return getTaskSummaryTableView(dataReader.getData(duration), style);
     }
 
     /**
