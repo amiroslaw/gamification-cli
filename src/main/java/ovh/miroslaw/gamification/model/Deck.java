@@ -1,6 +1,5 @@
-package ovh.miroslaw.gamification;
+package ovh.miroslaw.gamification.model;
 
-import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
@@ -37,10 +36,3 @@ public final class Deck {
     }
 }
 
-record Card(int id, @NotNull int type, @NotNull String title, String description, String url) {
-    Card {
-        description = description == null ? "" : description;
-        url = url == null ? "" : url;
-    }
-
-}
