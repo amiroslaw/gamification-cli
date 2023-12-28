@@ -49,7 +49,7 @@ public class DeckManager {
     }
 
     public String timewSummary(TimewDuration duration) {
-        return getTaskSummaryTableView(dataReader.getData(duration.toString()));
+        return getTaskSummaryTableView(dataReader.getData(duration));
     }
 
     /**
@@ -65,7 +65,7 @@ public class DeckManager {
         drawNumber = validateDrawAmount(drawNumber);
         final List<Card> polledCards = pollCards(drawNumber);
 
-        System.out.printf("Cards drew: %s%n%s" + drawNumber, getCardTableView(polledCards));
+        System.out.printf("Cards drew: %d%n%s", drawNumber, getCardTableView(polledCards));
 
         deck.drawCards(polledCards, drawNumber);
         return deck;
@@ -76,9 +76,8 @@ public class DeckManager {
     }
 
     private int readPomodoroAwardsAmount(TimewDuration duration) {
-        final long minutes = dataReader.getData(duration.toString()).parallelStream()
+        final long minutes = dataReader.getData(duration).parallelStream()
                 .map(Task::mapToDuration)
-                .map(Duration::abs)
                 .reduce(Duration.ZERO, Duration::plus)
                 .toMinutes();
         return Math.round(minutes / pomodoroDuration);

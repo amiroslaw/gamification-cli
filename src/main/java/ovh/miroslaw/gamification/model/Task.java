@@ -26,7 +26,7 @@ public class Task {
     }
 
     public Duration mapToDuration() {
-        return end == null ? Duration.ofMinutes(0) : Duration.between(end, start);
+        return end == null ? Duration.ofMinutes(0) : Duration.between(end, start).abs();
     }
 
     public TagDuration mapToTagDuration() {

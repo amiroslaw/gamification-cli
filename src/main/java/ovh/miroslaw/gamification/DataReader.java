@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.stereotype.Service;
 import ovh.miroslaw.gamification.model.Task;
+import ovh.miroslaw.gamification.model.TimewDuration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,12 +21,12 @@ import java.util.stream.Collectors;
 public class DataReader {
 
     @RegisterReflectionForBinding(Task.class)
-    public List<Task> getData(String duration) {
+    public List<Task> getData(TimewDuration duration) {
         Process process;
         int exitCode = 0;
         String output = "";
         try {
-            process = new ProcessBuilder("timew", "export", ":" + duration).start();
+            process = new ProcessBuilder("timew", "export", ":" + duration.toString().toLowerCase()).start();
             output = new BufferedReader(
                     new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))
                     .lines().collect(Collectors.joining("\n"));

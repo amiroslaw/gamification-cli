@@ -1,10 +1,17 @@
 package ovh.miroslaw.gamification;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import ovh.miroslaw.gamification.model.Deck;
 import ovh.miroslaw.gamification.model.TimewDuration;
+
+import java.util.Arrays;
+import java.util.List;
 
 //TODO add deck initializator - change optional:file in properties
 @RequiredArgsConstructor
@@ -41,22 +48,63 @@ public class Gamification {
         deckWriter.write(deck);
     }
 
-    @Command(description = "Draw cards from finished tasks from timewarrior", alias = "t")
-    public void timewDraw(@Option(defaultValue = defaultDuration, longNames = "duration", shortNames = 'd',
-                                  description = durationDesc) TimewDuration duration) {
-        final Deck deck = deckManager.timewDraw(duration);
-        deckWriter.write(deck);
-    }
-
-    @Command(description = "Show timew summary", alias = "s")
-    public String timewSummary(@Option(defaultValue = defaultDuration, longNames = "duration", shortNames = 'd',
-                                       description = durationDesc)
-            TimewDuration duration) {
-        return deckManager.timewSummary(duration);
-    }
-
     @Command(description = "List cards", alias = "l")
     public String list() {
         return deckManager.list();
+    }
+
+    @Bean
+    CommandRegistration timewDraw() {
+        return CommandRegistration.builder()
+                .command("timew-draw")
+                .description("Draw cards from finished tasks from timewarrior")
+                .withAlias()
+                    .command("t")
+                .and()
+                .withOption()
+                    .longNames("duration")
+                    .shortNames('d')
+                    .description(durationDesc)
+                    .defaultValue(defaultDuration)
+                    .completion(this::createDurationCompletion)
+                .and()
+                .withTarget()
+                    .consumer(ctx -> {
+                        final String duration = ctx.getOptionValue("d");
+                        final Deck deck = deckManager.timewDraw(TimewDuration.valueOf(duration.toUpperCase()));
+                        deckWriter.write(deck);
+                    })
+                .and()
+                .build();
+    }
+
+    @Bean
+    CommandRegistration timewSummary() {
+        return CommandRegistration.builder()
+                .command("timew-summary")
+                .description("Show timew summary")
+                .withAlias()
+                    .command("s")
+                .and()
+                .withOption()
+                    .longNames("duration")
+                    .shortNames('d')
+                    .description(durationDesc)
+                    .defaultValue(defaultDuration)
+                    .completion(this::createDurationCompletion)
+                .and()
+                .withTarget()
+                    .function(ctx -> {
+                        final String duration = ctx.getOptionValue("d");
+                        return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()));
+                    })
+                .and()
+                .build();
+    }
+
+    private List<CompletionProposal> createDurationCompletion(CompletionContext completionContext) {
+        return Arrays.stream(TimewDuration.values())
+            .map(e -> new CompletionProposal(e.toString().toLowerCase()))
+            .toList();
     }
 }
