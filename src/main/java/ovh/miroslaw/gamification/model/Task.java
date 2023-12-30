@@ -10,7 +10,6 @@ public class Task {
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime start;
-
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime end;
     private List<String> tags;
@@ -20,46 +19,41 @@ public class Task {
     }
 
     public Task(LocalDateTime start, LocalDateTime end, List<String> tags) {
+        if (start == null || end == null || tags == null) {
+            throw new IllegalArgumentException("Invalid argument");
+        }
+
         this.start = start;
         this.end = end;
         this.tags = tags;
     }
 
     public Duration mapToDuration() {
-        return end == null ? Duration.ofMinutes(0) : Duration.between(end, start).abs();
+        return calculateDuration();
+    }
+
+    private Duration calculateDuration() {
+        return end == null ? Duration.ZERO : Duration.between(end, start).abs();
     }
 
     public TagDuration mapToTagDuration(Style style) {
-        final Duration duration = end == null ? Duration.ofMinutes(0) : Duration.between(end, start);
         final String tag = switch (style) {
             case fancy -> String.join(", ", this.tags);
             case slim -> this.tags.getLast();
         };
-        return new TagDuration(tag, duration.abs());
+        return new TagDuration(tag, calculateDuration());
     }
 
     public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
-
     public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
     public List<String> getTags() {
         return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
     }
 
     @Override

@@ -26,7 +26,8 @@ import static java.util.stream.Collectors.toList;
 
 public final class TerminalUtil {
 
-    public static final BiFunction<String,AnsiColor,String> ANSI = (s, c) -> AnsiOutput.toString(c, s, AnsiColor.DEFAULT);
+    public static final BiFunction<String, AnsiColor, String> ANSI = (s, c) -> AnsiOutput.toString(c, s,
+            AnsiColor.DEFAULT);
     public static final BiConsumer<String, AnsiColor> ANSI_PRINT = (s, c) ->
             System.out.println(AnsiOutput.toString(c, s, AnsiColor.DEFAULT));
 
@@ -52,23 +53,28 @@ public final class TerminalUtil {
         final List<TagDuration> tagDurations = tasks.parallelStream()
                 .map(t -> t.mapToTagDuration(outOptions.style()))
                 .collect(toList());
-
         final Map<String, Duration> summary = tagDurations.parallelStream()
                 .collect(groupingBy(TagDuration::name,
-                        mapping(TagDuration::duration, reducing(Duration.ZERO, Duration::plus))));
-
+                        mapping(TagDuration::duration,
+                                reducing(Duration.ZERO, Duration::plus))));
         final List<Object[]> data = summary.entrySet().parallelStream()
                 .map(e -> new Object[]{e.getKey(), durationFormat(e.getValue(), outOptions.hasDayFormat())})
                 .collect(toList());
+
         if (Style.fancy == outOptions.style()) {
             data.addFirst(new Object[]{"Tags", "Duration"});
         }
 
-        Duration sum = tagDurations.parallelStream()
+        Duration total = calculateTotalDuration(tagDurations);
+
+        return String.format("%sTotal: %s", getView(data, outOptions.style()),
+                durationFormat(total, outOptions.hasDayFormat()));
+    }
+
+    private static Duration calculateTotalDuration(List<TagDuration> tagDurations) {
+        return tagDurations.parallelStream()
                 .map(TagDuration::duration)
                 .reduce(Duration.ZERO, Duration::plus);
-
-        return String.format("%sTotal: %s", getView(data, outOptions.style()), durationFormat(sum, outOptions.hasDayFormat()));
     }
 
     private static String durationFormat(Duration duration, boolean dayTimeFormat) {

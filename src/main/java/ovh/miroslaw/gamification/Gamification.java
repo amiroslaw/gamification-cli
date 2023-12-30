@@ -1,5 +1,6 @@
 package ovh.miroslaw.gamification;
 
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.shell.CompletionContext;
@@ -45,7 +46,8 @@ public class Gamification {
                         """;
 
     @Command(description = "Draw cards", alias = "d")
-    public void draw(@Option(defaultValue = "1", longNames = "draw-number", shortNames = 'n') int drawNumber) {
+    public void draw(@Option(defaultValue = "1", longNames = "draw-number", shortNames = 'n')
+                    @Positive int drawNumber) {
         final Deck deck = deckManager.draw(drawNumber);
         deckWriter.write(deck);
     }
