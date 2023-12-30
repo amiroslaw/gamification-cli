@@ -29,7 +29,7 @@ public class Task {
         return end == null ? Duration.ofMinutes(0) : Duration.between(end, start).abs();
     }
 
-    public TagDuration mapToTagDuration(StyleOption style) {
+    public TagDuration mapToTagDuration(Style style) {
         final Duration duration = end == null ? Duration.ofMinutes(0) : Duration.between(end, start);
         final String tag = switch (style) {
             case fancy -> String.join(", ", this.tags);

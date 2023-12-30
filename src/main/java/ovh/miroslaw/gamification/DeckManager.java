@@ -3,10 +3,11 @@ package ovh.miroslaw.gamification;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.stereotype.Service;
 import ovh.miroslaw.gamification.model.Card;
 import ovh.miroslaw.gamification.model.Deck;
-import ovh.miroslaw.gamification.model.StyleOption;
+import ovh.miroslaw.gamification.model.OutputOptions;
 import ovh.miroslaw.gamification.model.Task;
 import ovh.miroslaw.gamification.model.TimewDuration;
 
@@ -18,6 +19,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static ovh.miroslaw.gamification.TerminalUtil.ANSI_PRINT;
 import static ovh.miroslaw.gamification.TerminalUtil.getCardTableView;
 import static ovh.miroslaw.gamification.TerminalUtil.getTaskSummaryTableView;
 
@@ -49,8 +51,8 @@ public class DeckManager {
                 getCardTableView(deck.getCards()));
     }
 
-    public String timewSummary(TimewDuration duration, StyleOption style) {
-        return getTaskSummaryTableView(dataReader.getData(duration), style);
+    public String timewSummary(TimewDuration duration, OutputOptions outputOptions) {
+        return getTaskSummaryTableView(dataReader.getData(duration), outputOptions);
     }
 
     /**
@@ -86,7 +88,7 @@ public class DeckManager {
 
     private int validateDrawAmount(int numCardsToDraw) {
         if (deck.getSize() < numCardsToDraw) {
-            System.out.println("Draws reminded: " + (numCardsToDraw - deck.getSize()));
+            ANSI_PRINT.accept("Draws reminded: " + (numCardsToDraw - deck.getSize()), AnsiColor.GREEN);
             return deck.getSize();
         }
         return numCardsToDraw;

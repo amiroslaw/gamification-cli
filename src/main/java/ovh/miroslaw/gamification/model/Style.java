@@ -1,5 +1,5 @@
 package ovh.miroslaw.gamification.model;
 
-public enum StyleOption {
+public enum Style {
     slim, fancy
 }

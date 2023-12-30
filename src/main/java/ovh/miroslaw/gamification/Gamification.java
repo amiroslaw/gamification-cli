@@ -8,7 +8,8 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import ovh.miroslaw.gamification.model.Deck;
-import ovh.miroslaw.gamification.model.StyleOption;
+import ovh.miroslaw.gamification.model.OutputOptions;
+import ovh.miroslaw.gamification.model.Style;
 import ovh.miroslaw.gamification.model.TimewDuration;
 
 import java.util.Arrays;
@@ -95,19 +96,26 @@ public class Gamification {
                     .completion(this::createDurationCompletion)
                 .and()
                 .withOption()
+                    .type(boolean.class)
+                    .longNames("dayFormat")
+                    .shortNames('f')
+                    .defaultValue("false")
+                    .description("Day time format will cast hours to days")
+                .and()
+                .withOption()
                     .longNames("style")
                     .shortNames('s')
                     .description("Table style")
-                    .defaultValue(StyleOption.fancy.toString())
+                    .defaultValue(Style.fancy.toString())
                     .completion(ctx -> Arrays.asList(
-                            new CompletionProposal(StyleOption.slim.toString()),
-                            new CompletionProposal(StyleOption.fancy.toString())))
+                            new CompletionProposal(Style.slim.toString()),
+                            new CompletionProposal(Style.fancy.toString())))
                 .and()
                 .withTarget()
                     .function(ctx -> {
                         final String duration = ctx.getOptionValue("d");
-                        final String style = ctx.getOptionValue("s");
-                        return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()), StyleOption.valueOf(style));
+                        final OutputOptions opts = new OutputOptions(Style.valueOf(ctx.getOptionValue("s")), ctx.getOptionValue("f"));
+                        return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()), opts);
                     })
                 .and()
                 .build();
