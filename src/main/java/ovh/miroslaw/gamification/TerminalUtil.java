@@ -24,6 +24,9 @@ import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Utility class for terminal output operations.
+ */
 public final class TerminalUtil {
 
     public static final BiFunction<String, AnsiColor, String> ANSI =
@@ -34,6 +37,14 @@ public final class TerminalUtil {
     private TerminalUtil() {
     }
 
+    /**
+     * Generates a table view string of Card data.
+     *
+     * The data and a Style.fancy enum are passed to the getView() method to generate a formatted string table.
+     *
+     * @param cards The List of Card objects to generate the table for
+     * @return A formatted string containing the Card table view.
+     */
     public static String getCardTableView(List<Card> cards) {
         if (cards.isEmpty()) {
             return ANSI.apply("No cards found", AnsiColor.RED);
@@ -46,6 +57,13 @@ public final class TerminalUtil {
         return getView(data, Style.fancy);
     }
 
+    /**
+     * Generates a summary table view of Task data.
+     *
+     * @param tasks The list of Tasks to summarize
+     * @param outOptions The output options from the command
+     * @return A string with the task summary table
+     */
     public static String getTaskSummaryTableView(List<Task> tasks, OutputOptions outOptions) {
         if (tasks.isEmpty()) {
             return ANSI.apply("No tasks found", AnsiColor.RED);

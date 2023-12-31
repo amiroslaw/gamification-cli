@@ -52,6 +52,13 @@ public class DeckManager {
                 getCardTableView(deck.getCards()));
     }
 
+    /**
+     * Generates a summary table view of timewarrior data.
+     *
+     * @param duration The time duration to summarize
+     * @param outputOptions Options for formatting the output
+     * @return A string containing the formatted task summary table.
+     */
     public String timewSummary(TimewDuration duration, OutputOptions outputOptions) {
         return getTaskSummaryTableView(dataReader.getData(duration), outputOptions);
     }
@@ -75,6 +82,12 @@ public class DeckManager {
         return deck;
     }
 
+    /**
+     * Draws cards from the deck based on Timewarrior data.
+     *
+     * @param duration The time duration for Timewarrior
+     * @return The updated deck instance after drawing cards
+     */
     public Deck timewDraw(TimewDuration duration) {
         return draw(readPomodoroAwardsAmount(duration));
     }

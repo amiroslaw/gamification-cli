@@ -21,6 +21,9 @@ import java.util.stream.IntStream;
 
 import static ovh.miroslaw.gamification.TerminalUtil.ANSI_PRINT;
 
+/**
+ * Service for writing Deck data to YAML file.
+ */
 @Service
 public class DeckWriter {
 

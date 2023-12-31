@@ -20,9 +20,18 @@ import java.util.stream.Collectors;
 
 import static ovh.miroslaw.gamification.TerminalUtil.ANSI_PRINT;
 
+/**
+ * Service for reading Timewarrior data.
+ */
 @Service
 public class DataReader {
 
+    /**
+     * Gets Timewarrior task data for a time duration.
+     *
+     * @param duration The time duration to get data for
+     * @return List of Task objects parsed from Timewarrior output
+     */
     @RegisterReflectionForBinding(Task.class)
     public List<Task> getData(TimewDuration duration) {
 
