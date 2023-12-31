@@ -64,7 +64,7 @@ public class Gamification {
     @Bean
     CommandRegistration timewDraw() {
         return CommandRegistration.builder()
-                .command("timew-draw")
+                .command("draw-timew")
                 .description("Draw cards from finished tasks from timewarrior")
                 .withAlias()
                     .command("t")
@@ -89,7 +89,7 @@ public class Gamification {
     @Bean
     CommandRegistration timewSummary() {
         return CommandRegistration.builder()
-                .command("timew-summary")
+                .command("summary-timew")
                 .description("Show timew summary")
                 .withAlias()
                     .command("s")
