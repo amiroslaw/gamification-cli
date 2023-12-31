@@ -1,7 +1,7 @@
 package ovh.miroslaw.gamification;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,6 @@ import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -30,18 +29,20 @@ import static ovh.miroslaw.gamification.TerminalUtil.getTaskSummaryTableView;
 @Service
 public class DeckManager {
 
-    public static final int EMPTY_CARD_VALUE = 0;
-    public static final String EMPTY_CARD_DESC = "Sorry no award this time";
-    public static final String EMPTY_CARD_TITLE = "Empty";
     public static final int MAIN_AWARD_CARD_TYPE = 1;
     private final Deck deck;
     private final DataReader dataReader;
     @Value("${pomodoro.duration}")
     private float pomodoroDuration;
+    @Value("${spring.config.import}")
+    private String configPath;
 
-    private final Supplier<Card> createEmptyCard = () -> new Card(EMPTY_CARD_VALUE, EMPTY_CARD_VALUE, EMPTY_CARD_TITLE,
-            EMPTY_CARD_DESC,
-            Strings.EMPTY);
+    @PostConstruct
+    public void deckChecker() {
+        if (deck.getCards() == null || deck.getCards().isEmpty()) {
+            ANSI_PRINT.accept("No cards found. Please check: " + configPath, AnsiColor.RED);
+        }
+    }
 
     /**
      * Prints a summary of the current deck.
@@ -103,7 +104,7 @@ public class DeckManager {
     }
 
     private ArrayDeque<Card> createDeque() {
-        List<Card> shuffled = Stream.generate(createEmptyCard)
+        List<Card> shuffled = Stream.generate(Card.createEmpty)
                 .limit((long) deck.getSize() - deck.getCards().size())
                 .collect(toList());
         shuffled.addAll(deck.getCards());

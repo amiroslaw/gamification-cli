@@ -26,10 +26,10 @@ import static java.util.stream.Collectors.toList;
 
 public final class TerminalUtil {
 
-    public static final BiFunction<String, AnsiColor, String> ANSI = (s, c) -> AnsiOutput.toString(c, s,
-            AnsiColor.DEFAULT);
-    public static final BiConsumer<String, AnsiColor> ANSI_PRINT = (s, c) ->
-            System.out.println(AnsiOutput.toString(c, s, AnsiColor.DEFAULT));
+    public static final BiFunction<String, AnsiColor, String> ANSI =
+            (s, c) -> AnsiOutput.toString(c, s, AnsiColor.DEFAULT);
+    public static final BiConsumer<String, AnsiColor> ANSI_PRINT =
+            (s, c) -> System.out.println(AnsiOutput.toString(c, s, AnsiColor.DEFAULT));
 
     private TerminalUtil() {
     }

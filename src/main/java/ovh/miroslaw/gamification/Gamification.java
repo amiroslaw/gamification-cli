@@ -16,15 +16,14 @@ import ovh.miroslaw.gamification.model.TimewDuration;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO add deck initializator - change optional:file in properties
 @RequiredArgsConstructor
 @Command
 public class Gamification {
 
     private final DeckManager deckManager;
     private final DeckWriter deckWriter;
-    private final String defaultDuration = "yesterday";
-    private final String durationDesc = """
+    private static final String DEFAULT_DURATION = "yesterday";
+    private static final String DURATION_DESC = """
             yesterday     The 24 hours of the previous day
             day           The 24 hours of the current day
             week          This week
@@ -57,6 +56,11 @@ public class Gamification {
         return deckManager.list();
     }
 
+    @Command(description = "Initialize deck", alias = "i")
+    public void init() {
+        deckWriter.init();
+    }
+
     @Bean
     CommandRegistration timewDraw() {
         return CommandRegistration.builder()
@@ -68,8 +72,8 @@ public class Gamification {
                 .withOption()
                     .longNames("duration")
                     .shortNames('d')
-                    .description(durationDesc)
-                    .defaultValue(defaultDuration)
+                    .description(DURATION_DESC)
+                    .defaultValue(DEFAULT_DURATION)
                     .completion(this::createDurationCompletion)
                 .and()
                 .withTarget()
@@ -93,8 +97,8 @@ public class Gamification {
                 .withOption()
                     .longNames("duration")
                     .shortNames('d')
-                    .description(durationDesc)
-                    .defaultValue(defaultDuration)
+                    .description(DURATION_DESC)
+                    .defaultValue(DEFAULT_DURATION)
                     .completion(this::createDurationCompletion)
                 .and()
                 .withOption()
