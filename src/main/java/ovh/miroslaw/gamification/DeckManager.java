@@ -2,6 +2,7 @@ package ovh.miroslaw.gamification;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static ovh.miroslaw.gamification.TerminalUtil.ANSI;
 import static ovh.miroslaw.gamification.TerminalUtil.ANSI_PRINT;
 import static ovh.miroslaw.gamification.TerminalUtil.getCardTableView;
 import static ovh.miroslaw.gamification.TerminalUtil.getTaskSummaryTableView;
@@ -48,8 +50,12 @@ public class DeckManager {
      * Prints a summary of the current deck.
      */
     public String list() {
-        return String.format("Deck size: %s%nCards reminds: %d%n%s", deck.getSize(), deck.getCards().size(),
-                getCardTableView(deck.getCards()));
+        final List<Card> cards = deck.getCards();
+        if (cards.isEmpty()) {
+            return ANSI.apply("No cards found" + Strings.LINE_SEPARATOR, AnsiColor.RED);
+        }
+        return String.format("Deck size: %s%nCards reminds: %d%n%s", deck.getSize(), cards.size(),
+                getCardTableView(cards));
     }
 
     /**

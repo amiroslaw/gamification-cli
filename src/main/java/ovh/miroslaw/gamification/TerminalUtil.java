@@ -1,5 +1,6 @@
 package ovh.miroslaw.gamification;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.shell.table.ArrayTableModel;
@@ -46,9 +47,6 @@ public final class TerminalUtil {
      * @return A formatted string containing the Card table view.
      */
     public static String getCardTableView(List<Card> cards) {
-        if (cards.isEmpty()) {
-            return ANSI.apply("No cards found", AnsiColor.RED);
-        }
         final List<Object[]> data = cards.stream()
                 .map(i -> new Object[]{i.type(), i.title(), i.description(), i.url()})
                 .collect(toList());
@@ -66,7 +64,7 @@ public final class TerminalUtil {
      */
     public static String getTaskSummaryTableView(List<Task> tasks, OutputOptions outOptions) {
         if (tasks.isEmpty()) {
-            return ANSI.apply("No tasks found", AnsiColor.RED);
+            return ANSI.apply("No tasks found." + Strings.LINE_SEPARATOR, AnsiColor.RED);
         }
         final List<TagDuration> tagDurations = tasks.parallelStream()
                 .map(t -> t.mapToTagDuration(outOptions.style()))
