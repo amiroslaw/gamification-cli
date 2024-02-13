@@ -34,6 +34,7 @@ public final class TerminalUtil {
             (s, c) -> AnsiOutput.toString(c, s, AnsiColor.DEFAULT);
     public static final BiConsumer<String, AnsiColor> ANSI_PRINT =
             (s, c) -> System.out.println(AnsiOutput.toString(c, s, AnsiColor.DEFAULT));
+    public static final String EMPTY_LINE_REGEX = "(?m)^[ \t]*\r?\n";
 
     private TerminalUtil() {
     }
@@ -67,7 +68,7 @@ public final class TerminalUtil {
             return ANSI.apply("No tasks found." + Strings.LINE_SEPARATOR, AnsiColor.RED);
         }
         final List<TagDuration> tagDurations = tasks.parallelStream()
-                .map(t -> t.mapToTagDuration(outOptions.style()))
+                .map(t -> t.mapToTagDuration(outOptions.hasTags()))
                 .collect(toList());
         final Map<String, Duration> summary = tagDurations.parallelStream()
                 .collect(groupingBy(TagDuration::name,
@@ -106,9 +107,13 @@ public final class TerminalUtil {
     private static String getView(List<Object[]> data, Style style) {
         TableModel model = new ArrayTableModel(data.toArray(Object[][]::new));
         TableBuilder tableBuilder = new TableBuilder(model);
-        final var builderfun = getBuilderFromOption(style);
-        builderfun.apply(tableBuilder);
-        return tableBuilder.build().render(110);
+        final var builderFun = getBuilderFromOption(style);
+        builderFun.apply(tableBuilder);
+        final String render = tableBuilder.build().render(110);
+        if (Style.slim == style) {
+            return render.replaceAll(EMPTY_LINE_REGEX, "");
+        }
+        return render;
     }
 
     private static UnaryOperator<TableBuilder> getBuilderFromOption(Style style) {

@@ -117,10 +117,20 @@ public class Gamification {
                             new CompletionProposal(Style.slim.toString()),
                             new CompletionProposal(Style.fancy.toString())))
                 .and()
+                .withOption()
+                    .longNames("tags")
+                    .shortNames('t')
+                    .description("Show tags")
+                    .type(Boolean.class)
+                .defaultValue("false")
+                .and()
                 .withTarget()
                     .function(ctx -> {
                         final String duration = ctx.getOptionValue("d");
-                        final OutputOptions opts = new OutputOptions(Style.valueOf(ctx.getOptionValue("s")), ctx.getOptionValue("f"));
+                        final OutputOptions opts = new OutputOptions(
+                                Style.valueOf(ctx.getOptionValue("s")),
+                                ctx.getOptionValue("f"),
+                                ctx.getOptionValue("t"));
                         return deckManager.timewSummary(TimewDuration.valueOf(duration.toUpperCase()), opts);
                     })
                 .and()
