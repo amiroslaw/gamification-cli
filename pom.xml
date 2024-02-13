@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ovh.miroslaw</groupId>
@@ -15,7 +15,7 @@
 	<description>Gamification in spring shell</description>
 	<properties>
 		<java.version>21</java.version>
-		<spring-shell.version>3.2.0-RC1</spring-shell.version>
+		<spring-shell.version>3.2.0</spring-shell.version>
 		<mainClass>ovh.miroslaw.gamification.GamificationApplication</mainClass>
 	</properties>
 	<dependencies>
@@ -76,26 +76,8 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 </project>
