@@ -1,0 +1,42 @@
+== Gamification
+The CLI motivational application that utilizes the https://en.wikipedia.org/wiki/Gamification[gamification] method. The application can increase your motivation by drawing awards when tasks were done. 
+This application optimally when integrated with the `Time Warrior` program. One card can be drawn when you finish a interval (one hour by default). 
+
+=== How to use
+Add folder `$XDG_CONFIG_HOME/gamification` and create file `deck.yaml`. The file contains configuration and list of award cards. The scheme can be found in this repository. Fill the deck with your awards, and indicate how many cards the deck will be initialized. For instance, 10 awards and a deck size of 30 imply that 20 of them are empty cards.
+Pomodoro duration refers to an interval in minutes after which the program will draw one card.
+
+WARNING: This program was designed with a Linux system in mind. It has not been tested on other systems, so you may need to modify the `path.config` property.
+
+.configuration
+[source,yaml]
+----
+pomodoro:
+  duration: 60
+init:
+  deck:
+    size: 30
+----
+
+.Available commands
+* init, i: Initialize deck
+* summary-timew, s: Show timew summary
+* draw, d: Draw cards
+* draw-timew, t: Draw cards from finished tasks from timewarrior
+* list, l: List cards
+
+.run
+[source,bash]
+----
+java -jar gamification.jar
+----
+
+=== Used technology
+This is cross-platform software, you must have installed https://java.com/pl/download/[java 21] or above to run it. 
+Spring Shell
+The program can be built into a GraalVM native image. The installation guide is in the `BUILD.md` file.
+
+[source,java]
+----
+mvn -Pnative native:compile 
+----

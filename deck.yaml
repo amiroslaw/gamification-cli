@@ -1,0 +1,56 @@
+pomodoro:
+  duration: 60
+init:
+  deck:
+    size: 30
+deck:
+  cards:
+    - id: 1
+      type: 1
+      title: Restaurant Gift Card
+      description: $50 restaurant gift card
+      url: ""
+    - id: 2
+      type: 2
+      title: Movie Tickets
+      description: 2 movie tickets
+
+    - id: 3
+      type: 2
+      title: Coffee Gift Card
+      description: $25 coffee shop gift card
+
+    - id: 4
+      type: 2
+      title: Dessert Gift Card
+      description: 2 free desserts
+
+    - id: 5
+      type: 3
+      title: Bookstore Gift Card
+      description: Bookstore gift card $75
+
+    - id: 6
+      type: 3
+      title: Pizza Gift Card
+      description: 1 free pizza
+
+    - id: 7
+      type: 3
+      title: Subway Pass
+      description: 5 ride subway pass
+
+    - id: 8
+      type: 3
+      title: Coffee Gift Card
+      description: 1 free coffee per week for a month
+
+    - id: 9
+      type: 3
+      title: Concert Ticket Discount
+      description: $50 off concert tickets
+
+    - id: 10
+      type: 3
+      title: Restaurant Discount
+      description: 10% off restaurant bill
